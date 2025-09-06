@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channels vs Mutexes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+        .panel {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #333;
+        }
+        #channels {
+            background-color: #f0f8ff;
+        }
+        #mutexes {
+            background-color: #fff0f5;
+        }
+        .message {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Channels vs Mutexes</h1>
+    <div class="container">
+        <div class="panel" id="channels">
+            <h2>Channels</h2>
+            <div id="channelsOutput"></div>
+        </div>
+        <div class="panel" id="mutexes">
+            <h2>Port 8081 (Mutexes)</h2>
+            <div id="mutexesOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        function connectWebSocket(url, outputElementId) {
+            const ws = new WebSocket(url);
+            const output = document.getElementById(outputElementId);
+
+            ws.onopen = () => {
+                const msg = document.createElement("div");
+                msg.className = "message";
+                msg.textContent = `Connected to ${url}`;
+                msg.style.color = "green";
+                output.appendChild(msg);
+            };
+
+            ws.onmessage = (event) => {
+                const msg = document.createElement("div");
+                msg.className = "message";
+                msg.textContent = event.data;
+                output.appendChild(msg);
+                output.scrollTop = output.scrollHeight;
+            };
+
+            ws.onclose = () => {
+                const msg = document.createElement("div");
+                msg.className = "message";
+                msg.textContent = `Disconnected ${url}`;
+                msg.style.color = "red";
+                output.appendChild(msg);
+            };
+
+            ws.onerror = (error) => {
+                const msg = document.createElement("div");
+                msg.className = "message";
+                msg.textContent = `Error: ${error.message}`;
+                msg.style.color = "red";
+                output.appendChild(msg);
+            };
+        }
+
+        window.onload = () => {
+            connectWebSocket("ws://localhost:3000/channels", "channelsOutput");
+            connectWebSocket("ws://localhost:3000/mutexes", "mutexesOutput");
+        };
+    </script>
+</body>
+</html>
