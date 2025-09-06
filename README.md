@@ -13,3 +13,10 @@ The implementation using Go's channels results in a more natural and even switch
 This is simply because channels coordinate access to resources, avoiding the need to fight for them as mutual exclusions require.
 
 For anyone interested further, you can read about "Communicating Sequential Processes" (CSP) by Tony Hoare and the "share memory by communicating" principle.
+
+## How to run
+
+ - Navigate to the directory `src`
+ - Run `go build`
+ - Run `./main`; Give execution permissions **if** needed (`sudo chmod +x ./main`).
+ - On a browser of your choice, navigate to `locahost:3000`
